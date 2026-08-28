@@ -1,0 +1,2010 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>chisa.official // AI Developer Portfolio</title>
+<link rel="icon" type="image/jpeg" href="assets/avatar.jpg">
+<meta name="description" content="合肥工业大学软件工程准大二学生 · AI应用落地实践者">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   DESIGN SYSTEM / TOKENS
+   ============================================ */
+:root {
+  /* Backgrounds */
+  --bg-base: #08060c;
+  --bg-card: #100b18;
+  --bg-card-hover: #16101f;
+  --bg-terminal: #0a0710;
+  --bg-input: #0d0a14;
+
+  /* Accent colors — derived from "飞行雪绒" pixel avatar */
+  --pink: #e87eae;
+  --pink-bright: #f4a0c4;
+  --pink-glow: rgba(232, 126, 174, 0.35);
+  --pink-dim: rgba(232, 126, 174, 0.12);
+  --purple: #9d7ad6;
+  --purple-bright: #b89ce8;
+  --purple-glow: rgba(157, 122, 214, 0.35);
+  --purple-dim: rgba(157, 122, 214, 0.1);
+  --blue: #5dabc6;
+  --blue-bright: #7cc5db;
+  --blue-glow: rgba(93, 171, 198, 0.3);
+  --blue-dim: rgba(93, 171, 198, 0.1);
+  --lavender: #c8a8e8;
+
+  /* Text */
+  --text: #f5eef8;
+  --text-secondary: #bcaac8;
+  --text-muted: #8070a0;
+  --text-dim: #5a4d70;
+
+  /* Borders */
+  --border: #241a30;
+  --border-bright: #3d2e50;
+  --border-hover: #5a4570;
+
+  /* Fonts */
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-pixel: 'Press Start 2P', monospace;
+
+  /* Spacing */
+  --max-w: 1200px;
+  --nav-h: 60px;
+}
+
+/* ============================================
+   RESET & BASE
+   ============================================ */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-h);
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Grid background pattern */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(157, 122, 214, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(157, 122, 214, 0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* CRT scanlines overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.12),
+    rgba(0, 0, 0, 0.12) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+::selection {
+  background: var(--pink);
+  color: var(--bg-base);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 0; }
+::-webkit-scrollbar-thumb:hover { background: var(--purple); }
+
+/* ============================================
+   LAYOUT UTILITIES
+   ============================================ */
+.container {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative;
+  z-index: 1;
+}
+
+.section {
+  padding: 100px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--pink);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-label::before {
+  content: '';
+  width: 24px;
+  height: 2px;
+  background: var(--pink);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 48px;
+  letter-spacing: -0.02em;
+}
+
+.section-title .accent { color: var(--pink); }
+.section-title .accent-purple { color: var(--purple); }
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-h);
+  background: rgba(8, 6, 12, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+}
+
+.nav-inner {
+  max-width: var(--max-w);
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  font-family: var(--font-pixel);
+  font-size: 0.6rem;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-logo .dot {
+  width: 8px;
+  height: 8px;
+  background: var(--pink);
+  display: inline-block;
+}
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  transition: color 0.2s;
+  position: relative;
+}
+
+.nav-links a:hover { color: var(--pink); }
+
+.nav-links a.active {
+  color: var(--pink);
+}
+
+.nav-links a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--pink);
+}
+
+.nav-status {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--blue);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-status .dot {
+  width: 6px;
+  height: 6px;
+  background: var(--blue);
+  border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Language toggle */
+.nav-lang {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border-bright);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  overflow: hidden;
+}
+
+.nav-lang button {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: 0.05em;
+}
+
+.nav-lang button.active {
+  background: var(--pink);
+  color: var(--bg-base);
+}
+
+.nav-lang button:not(.active):hover {
+  color: var(--pink);
+  background: var(--pink-dim);
+}
+
+/* Mobile nav toggle */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: 1px solid var(--border-bright);
+  padding: 6px 10px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text);
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+.hero {
+  min-height: 100vh;
+  padding: calc(var(--nav-h) + 40px) 0 60px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-glow {
+  position: absolute;
+  top: 20%;
+  right: 5%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, var(--purple-glow) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-glow-2 {
+  position: absolute;
+  bottom: 10%;
+  left: 0%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, var(--pink-glow) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 48px;
+  align-items: center;
+  width: 100%;
+}
+
+/* Terminal boot sequence */
+.terminal {
+  background: var(--bg-terminal);
+  border: 1px solid var(--border);
+  padding: 16px 20px;
+  margin-bottom: 32px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.8;
+  color: var(--blue);
+  position: relative;
+}
+
+.terminal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+}
+
+.terminal-dots {
+  position: absolute;
+  top: 6px;
+  left: 12px;
+  display: flex;
+  gap: 6px;
+}
+
+.terminal-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.terminal-dots span:nth-child(1) { background: var(--pink); }
+.terminal-dots span:nth-child(2) { background: var(--purple); }
+.terminal-dots span:nth-child(3) { background: var(--blue); }
+
+.terminal-body {
+  margin-top: 16px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.terminal-line {
+  opacity: 0;
+  animation: term-in 0.3s forwards;
+}
+
+.terminal-line .ok { color: var(--blue); }
+.terminal-line .arrow { color: var(--text-muted); }
+.terminal-line .welcome { color: var(--pink); }
+
+@keyframes term-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 14px;
+  background: var(--blue);
+  vertical-align: text-bottom;
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Hero name */
+.hero-name {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin-bottom: 24px;
+}
+
+.hero-name .outline {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--text);
+  text-stroke: 2px var(--text);
+}
+
+.hero-name .filled {
+  color: var(--pink);
+}
+
+/* Hero subtitle */
+.hero-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  letter-spacing: 0.02em;
+}
+
+.hero-subtitle .sep { color: var(--text-dim); margin: 0 8px; }
+
+.hero-bio {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  max-width: 560px;
+  margin-bottom: 32px;
+  line-height: 1.75;
+}
+
+.hero-bio strong {
+  color: var(--lavender);
+  font-weight: 500;
+}
+
+/* CTA buttons */
+.hero-cta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 14px 28px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  letter-spacing: 0.03em;
+}
+
+.btn-primary {
+  background: var(--pink);
+  color: var(--bg-base);
+}
+
+.btn-primary:hover {
+  background: var(--pink-bright);
+  box-shadow: 0 0 24px var(--pink-glow);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border-bright);
+}
+
+.btn-outline:hover {
+  border-color: var(--pink);
+  color: var(--pink);
+}
+
+/* Avatar display */
+.hero-avatar-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatar-frame {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  aspect-ratio: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--border-bright);
+  padding: 12px;
+  overflow: hidden;
+}
+
+.avatar-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.25) 2px,
+    rgba(0, 0, 0, 0.25) 4px
+  );
+  pointer-events: none;
+  z-index: 3;
+}
+
+.avatar-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(157, 122, 214, 0.08) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 4;
+  animation: scan-sweep 4s linear infinite;
+}
+
+@keyframes scan-sweep {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: contrast(1.05) saturate(1.1);
+}
+
+/* Avatar metadata tags */
+.avatar-meta-top {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-bright);
+  z-index: 5;
+}
+
+.avatar-meta-top .label { color: var(--pink); }
+.avatar-meta-top .version { color: var(--text-muted); }
+
+.avatar-meta-bottom {
+  position: absolute;
+  bottom: -1px;
+  left: -1px;
+  right: -1px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-bright);
+  z-index: 5;
+}
+
+.avatar-meta-bottom .format { color: var(--text-secondary); }
+.avatar-meta-bottom .status {
+  color: var(--blue);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.avatar-meta-bottom .status .dot {
+  width: 6px;
+  height: 6px;
+  background: var(--blue);
+  border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* Corner brackets */
+.corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--pink);
+  z-index: 6;
+}
+
+.corner.tl { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+.corner.tr { top: -2px; right: -2px; border-left: none; border-bottom: none; }
+.corner.bl { bottom: -2px; left: -2px; border-right: none; border-top: none; }
+.corner.br { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+
+/* ============================================
+   ABOUT SECTION
+   ============================================ */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.about-visual {
+  position: relative;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  padding: 24px;
+}
+
+.about-visual-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--purple);
+  margin-bottom: 16px;
+}
+
+.about-stats {
+  display: grid;
+  gap: 16px;
+}
+
+.about-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--border);
+}
+
+.about-stat:last-child { border-bottom: none; }
+
+.about-stat .key {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.about-stat .val {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--lavender);
+}
+
+.about-text p {
+  margin-bottom: 20px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.about-text p strong {
+  color: var(--pink);
+  font-weight: 500;
+}
+
+.about-text .highlight {
+  color: var(--blue);
+  font-weight: 500;
+}
+
+.about-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 6px 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-bright);
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.tag:hover {
+  border-color: var(--pink);
+  color: var(--pink);
+}
+
+.tag.accent { border-color: var(--purple-dim); color: var(--purple); }
+.tag.accent:hover { border-color: var(--purple); }
+
+/* ============================================
+   SKILLS SECTION
+   ============================================ */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.skill-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 32px 28px;
+  position: relative;
+  transition: all 0.3s;
+  overflow: hidden;
+}
+
+.skill-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 0;
+  background: var(--pink);
+  transition: height 0.3s;
+}
+
+.skill-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-bright);
+  transform: translateY(-2px);
+}
+
+.skill-card:hover::before { height: 100%; }
+
+.skill-card-num {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+.skill-card-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-bright);
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+}
+
+.skill-card-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.skill-card-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.skill-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.skill-card-tags .tag {
+  font-size: 0.65rem;
+  padding: 4px 8px;
+}
+
+/* Color variants */
+.skill-card:nth-child(1) .skill-card-icon { border-color: var(--pink-dim); }
+.skill-card:nth-child(1) .skill-card-icon span { color: var(--pink); }
+.skill-card:nth-child(1)::before { background: var(--pink); }
+
+.skill-card:nth-child(2) .skill-card-icon { border-color: var(--purple-dim); }
+.skill-card:nth-child(2) .skill-card-icon span { color: var(--purple); }
+.skill-card:nth-child(2)::before { background: var(--purple); }
+
+.skill-card:nth-child(3) .skill-card-icon { border-color: var(--blue-dim); }
+.skill-card:nth-child(3) .skill-card-icon span { color: var(--blue); }
+.skill-card:nth-child(3)::before { background: var(--blue); }
+
+/* ============================================
+   EXPERIENCE SECTION
+   ============================================ */
+.exp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+}
+
+.exp-entry {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 32px;
+  position: relative;
+}
+
+.exp-number {
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--border-bright);
+  transition: -webkit-text-stroke-color 0.3s;
+}
+
+.exp-entry:hover .exp-number {
+  -webkit-text-stroke-color: var(--pink);
+}
+
+.exp-content {
+  border-left: 1px solid var(--border);
+  padding-left: 32px;
+  padding-bottom: 8px;
+}
+
+.exp-meta {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--blue);
+  margin-bottom: 10px;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.exp-meta .badge {
+  padding: 3px 8px;
+  border: 1px solid var(--border-bright);
+  color: var(--text-secondary);
+  font-size: 0.65rem;
+}
+
+.exp-meta .badge.accent {
+  border-color: var(--pink-dim);
+  color: var(--pink);
+  background: var(--pink-dim);
+}
+
+.exp-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.exp-role {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--purple);
+  margin-bottom: 16px;
+}
+
+.exp-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: 20px;
+  max-width: 680px;
+}
+
+.exp-desc strong {
+  color: var(--lavender);
+  font-weight: 500;
+}
+
+/* Experience stat cards */
+.exp-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+  max-width: 600px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+}
+
+.stat-card .stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.stat-card .stat-value {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--lavender);
+}
+
+.stat-card .stat-value.pink { color: var(--pink); }
+.stat-card .stat-value.blue { color: var(--blue); }
+
+/* Certificate placeholder */
+.cert-placeholder {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border: 1px dashed var(--border-bright);
+  background: var(--bg-card);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.cert-placeholder .cert-icon {
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--text-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+}
+
+.cert-placeholder .cert-status {
+  color: var(--purple);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cert-placeholder .cert-status .dot {
+  width: 6px;
+  height: 6px;
+  background: var(--purple);
+  border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* ============================================
+   EDUCATION SECTION
+   ============================================ */
+.edu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.edu-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 32px;
+  position: relative;
+}
+
+.edu-card-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--pink);
+  margin-bottom: 20px;
+}
+
+.edu-item {
+  margin-bottom: 16px;
+}
+
+.edu-item:last-child { margin-bottom: 0; }
+
+.edu-item .edu-key {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.edu-item .edu-val {
+  font-size: 0.9rem;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.edu-item .edu-val.accent { color: var(--lavender); }
+
+.edu-direction {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.edu-direction strong {
+  color: var(--blue);
+  font-weight: 500;
+}
+
+/* ============================================
+   SUMMARY SECTION
+   ============================================ */
+.summary {
+  text-align: center;
+  padding: 120px 0;
+  position: relative;
+}
+
+.summary-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--purple-glow) 0%, transparent 70%);
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.summary-content {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.summary-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--pink);
+  letter-spacing: 0.15em;
+  margin-bottom: 24px;
+}
+
+.summary-text {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.summary-text strong {
+  color: var(--pink);
+  font-weight: 600;
+}
+
+.summary-text .blue { color: var(--blue); font-weight: 500; }
+
+.summary-sub {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+/* ============================================
+   FOOTER / CONTACT
+   ============================================ */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 60px 0 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.footer-cell {
+  border: 1px solid var(--border);
+  padding: 24px;
+  background: var(--bg-card);
+  transition: all 0.2s;
+}
+
+.footer-cell:hover {
+  border-color: var(--border-hover);
+}
+
+.footer-cell .cell-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+
+.footer-cell .cell-value {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-cell .cell-value.pink { color: var(--pink-bright); }
+.footer-cell .cell-value.purple { color: var(--purple-bright); }
+.footer-cell .cell-value.blue { color: var(--blue-bright); }
+.footer-cell .cell-value.muted { color: var(--text-secondary); }
+
+.footer-cell a:hover {
+  color: var(--pink);
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.footer-bottom .left { display: flex; gap: 16px; align-items: center; }
+.footer-bottom .right { color: var(--text-dim); }
+
+.footer-logo {
+  font-family: var(--font-pixel);
+  font-size: 0.55rem;
+  color: var(--text-secondary);
+}
+
+/* ============================================
+   SCROLL REVEAL
+   ============================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .hero-avatar-wrap {
+    order: -1;
+  }
+
+  .avatar-frame {
+    max-width: 280px;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .edu-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .nav-toggle {
+    display: block;
+  }
+
+  .exp-entry {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .exp-content {
+    padding-left: 0;
+    border-left: none;
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+  }
+
+  .exp-number {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .container { padding: 0 20px; }
+  .section { padding: 64px 0; }
+  .nav-inner { padding: 0 20px; }
+  .nav-logo { font-size: 0.5rem; }
+  .hero-name { font-size: 2.5rem; }
+  .terminal { font-size: 0.7rem; padding: 14px 16px; }
+  .exp-stats { grid-template-columns: 1fr 1fr; }
+  .footer-bottom { flex-direction: column; gap: 12px; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================
+     NAVIGATION
+     ============================================ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <span class="dot"></span>
+      <span>chisa.official</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#hero" class="active" data-i18n="nav.home">首页</a></li>
+      <li><a href="#about" data-i18n="nav.about">关于我</a></li>
+      <li><a href="#skills" data-i18n="nav.skills">技能</a></li>
+      <li><a href="#experience" data-i18n="nav.exp">经历</a></li>
+      <li><a href="#education" data-i18n="nav.edu">教育</a></li>
+    </ul>
+    <div class="nav-lang">
+      <button id="lang-zh" class="active" data-lang="zh">中</button>
+      <button id="lang-en" data-lang="en">EN</button>
+    </div>
+    <div class="nav-status">
+      <span class="dot"></span>
+      <span>ONLINE</span>
+    </div>
+    <button class="nav-toggle">MENU</button>
+  </div>
+</nav>
+
+<!-- ============================================
+     HERO SECTION
+     ============================================ -->
+<section class="hero" id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow-2"></div>
+  <div class="container">
+    <div class="hero-grid">
+      <!-- Left: Terminal + Name + Bio -->
+      <div class="hero-left">
+        <div class="terminal">
+          <div class="terminal-dots">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="terminal-body" id="terminal-body">
+            <div class="terminal-line" style="animation-delay:0.1s"><span class="arrow">&gt;</span> portfolio.exe --boot</div>
+            <div class="terminal-line" style="animation-delay:0.4s"><span class="arrow">&gt;</span> loading profile........<span class="ok">[ok]</span></div>
+            <div class="terminal-line" style="animation-delay:0.7s"><span class="arrow">&gt;</span> mounting skills.......<span class="ok">[ok]</span></div>
+            <div class="terminal-line" style="animation-delay:1.0s"><span class="arrow">&gt;</span> connecting to AI......<span class="ok">[ok]</span></div>
+            <div class="terminal-line" style="animation-delay:1.3s"><span class="arrow">&gt;</span> init avatar...........<span class="ok">[ok]</span></div>
+            <div class="terminal-line" style="animation-delay:1.6s"><span class="welcome">&gt; welcome, traveler.</span><span class="cursor"></span></div>
+          </div>
+        </div>
+
+        <h1 class="hero-name">
+          <span class="outline">CHISA</span><span class="filled">.OFFICIAL</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          AI Application Developer <span class="sep">//</span> Software Engineering <span class="sep">//</span> HFUT
+        </p>
+
+        <p class="hero-bio" data-i18n="hero.bio" data-i18n-html>
+          合肥工业大学（宣城校区）软件工程专业准大二学生，长期聚焦<strong>人工智能应用落地</strong>领域，深耕 AI Agent 智能体开发、AI 自动化办公搭建、AIGC 图像生成三大核心方向。相较于基础专业学习，更注重技术的<strong>实战落地与场景应用</strong>。
+        </p>
+
+        <div class="hero-cta">
+          <a href="#experience" class="btn btn-primary" data-i18n="hero.cta1">查看经历 →</a>
+          <a href="#about" class="btn btn-outline" data-i18n="hero.cta2">关于我</a>
+        </div>
+      </div>
+
+      <!-- Right: Avatar -->
+      <div class="hero-avatar-wrap">
+        <div class="avatar-frame">
+          <div class="corner tl"></div>
+          <div class="corner tr"></div>
+          <div class="corner bl"></div>
+          <div class="corner br"></div>
+
+          <div class="avatar-meta-top">
+            <span class="label">// AVATAR.IMG</span>
+            <span class="version">v1.0.0</span>
+          </div>
+
+          <img src="assets/avatar.jpg" alt="chisa.official pixel avatar" class="avatar-img">
+
+          <div class="avatar-meta-bottom">
+            <span class="format">PIXEL // SELF</span>
+            <span class="status"><span class="dot"></span>ONLINE</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     ABOUT SECTION
+     ============================================ -->
+<section class="section" id="about">
+  <div class="container">
+    <div class="section-label reveal">// ABOUT_ME</div>
+    <h2 class="section-title reveal" data-i18n="about.title" data-i18n-html>关于<span class="accent">我</span></h2>
+
+    <div class="about-grid">
+      <!-- Left: Stats panel -->
+      <div class="about-visual reveal">
+        <div class="about-visual-label">// PROFILE_DATA</div>
+        <div class="about-stats">
+          <div class="about-stat">
+            <span class="key" data-i18n="about.k1">院校</span>
+            <span class="val" data-i18n="about.v1">合肥工业大学</span>
+          </div>
+          <div class="about-stat">
+            <span class="key" data-i18n="about.k2">校区</span>
+            <span class="val" data-i18n="about.v2">宣城校区</span>
+          </div>
+          <div class="about-stat">
+            <span class="key" data-i18n="about.k3">专业</span>
+            <span class="val" data-i18n="about.v3">软件工程</span>
+          </div>
+          <div class="about-stat">
+            <span class="key" data-i18n="about.k4">年级</span>
+            <span class="val" data-i18n="about.v4">准大二</span>
+          </div>
+          <div class="about-stat">
+            <span class="key" data-i18n="about.k5">方向</span>
+            <span class="val" data-i18n="about.v5">AI 应用落地</span>
+          </div>
+          <div class="about-stat">
+            <span class="key" data-i18n="about.k6">英语</span>
+            <span class="val" data-i18n="about.v6">IELTS 6.0</span>
+          </div>
+          <div class="about-stat">
+            <span class="key" data-i18n="about.k7">定位</span>
+            <span class="val" data-i18n="about.v7">实战型开发者</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Detailed text -->
+      <div class="about-text reveal reveal-delay-1">
+        <p data-i18n="about.p1" data-i18n-html>
+          目前就读于<strong>合肥工业大学宣城校区</strong>软件工程专业，即将升入大二。在专业学习之余，我明确锁定人工智能应用赛道，拒绝单一的课本理论学习，专注钻研轻量化、高落地性的 AI 技术应用。
+        </p>
+        <p data-i18n="about.p2" data-i18n-html>
+          重点研究 <span class="highlight">AI Agent 智能体搭建</span>、<span class="highlight">AI 办公自动化流程优化</span>、<span class="highlight">AI 生图创作与场景落地</span>，具备扎实的 AI 工具实操能力与场景化思维。
+        </p>
+        <p data-i18n="about.p3" data-i18n-html>
+          在能力储备上，我具备良好的英文阅读与学习能力，高中阶段曾取得<strong>雅思 6.0</strong> 成绩，能够无障碍阅读海外 AI 技术文档、前沿论文与官方开发手册，为自主学习前沿人工智能技术提供有力支撑。
+        </p>
+        <p data-i18n="about.p4" data-i18n-html>
+          大一学年，我始终以实战为核心提升个人技术能力，利用暑期完成企业在岗实习，并参与<strong>字节跳动、AMD 联合举办</strong>的官方 AI 专项实训，斩获大厂认证证书。现阶段深耕 AI 应用落地，持续打磨项目实操能力，积极积累产业级实践经验。
+        </p>
+
+        <div class="about-tags">
+          <span class="tag">AI AGENT</span>
+          <span class="tag">AIGC</span>
+          <span class="tag">AUTO-FLOW</span>
+          <span class="tag accent">PROMPT ENG</span>
+          <span class="tag accent">SOFTWARE ENG</span>
+          <span class="tag">IELTS 6.0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SKILLS SECTION
+     ============================================ -->
+<section class="section" id="skills">
+  <div class="container">
+    <div class="section-label reveal">// SKILL_MATRIX</div>
+    <h2 class="section-title reveal" data-i18n="skills.title" data-i18n-html>专业<span class="accent">技能</span></h2>
+
+    <div class="skills-grid">
+      <!-- Card 1: AI Core -->
+      <div class="skill-card reveal">
+        <div class="skill-card-num">01</div>
+        <div class="skill-card-icon"><span>◆</span></div>
+        <h3 class="skill-card-title" data-i18n="skills.t1">人工智能核心技能</h3>
+        <p class="skill-card-desc" data-i18n="skills.d1" data-i18n-html>
+          精通 AI Agent 智能体搭建与功能调试，熟悉智能体任务拆解、自动化流程配置；擅长 AI 办公自动化体系搭建；熟练掌握 AIGC 图像生成技术，精通 Prompt 优化、风格定制、场景化生图与作品精细化调整。
+        </p>
+        <div class="skill-card-tags">
+          <span class="tag">AI Agent</span>
+          <span class="tag">AIGC</span>
+          <span class="tag">Prompt</span>
+          <span class="tag">Auto-Flow</span>
+          <span class="tag">Style Custom</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Professional Foundation -->
+      <div class="skill-card reveal reveal-delay-1">
+        <div class="skill-card-num">02</div>
+        <div class="skill-card-icon"><span>◇</span></div>
+        <h3 class="skill-card-title" data-i18n="skills.t2">专业基础能力</h3>
+        <p class="skill-card-desc" data-i18n="skills.d2" data-i18n-html>
+          具备软件工程专业扎实的底层基础，掌握计算机基础理论、程序开发逻辑；拥有良好的自主学习能力与技术落地思维，擅长快速学习前沿 AI 工具与技术，并转化为实际应用成果。
+        </p>
+        <div class="skill-card-tags">
+          <span class="tag">CS Fundamentals</span>
+          <span class="tag">Programming</span>
+          <span class="tag">Self-Learning</span>
+          <span class="tag">Practical Mindset</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Language -->
+      <div class="skill-card reveal reveal-delay-2">
+        <div class="skill-card-num">03</div>
+        <div class="skill-card-icon"><span>○</span></div>
+        <h3 class="skill-card-title" data-i18n="skills.t3">语言能力</h3>
+        <p class="skill-card-desc" data-i18n="skills.d3" data-i18n-html>
+          持有雅思 6.0 成绩，具备优秀的英文读写能力，可独立阅读海外前沿 AI 技术资料、官方文档及学术内容，适配 AI 领域国际化技术学习需求。
+        </p>
+        <div class="skill-card-tags">
+          <span class="tag">IELTS 6.0</span>
+          <span class="tag">English Reading</span>
+          <span class="tag">Tech Docs</span>
+          <span class="tag">Academic</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     EXPERIENCE SECTION
+     ============================================ -->
+<section class="section" id="experience">
+  <div class="container">
+    <div class="section-label reveal">// EXPERIENCE_LOG</div>
+    <h2 class="section-title reveal" data-i18n="exp.title" data-i18n-html>实践<span class="accent">经历</span></h2>
+
+    <div class="exp-list">
+      <!-- Entry 01: Internship -->
+      <div class="exp-entry reveal">
+        <div class="exp-number">01</div>
+        <div class="exp-content">
+          <div class="exp-meta">
+            <span>INTERNSHIP</span>
+            <span class="badge" data-i18n="exp.b1">大一暑假</span>
+            <span class="badge accent" data-i18n="exp.b2">企业实战</span>
+          </div>
+          <h3 class="exp-title" data-i18n="exp.t1">广东创科安全科技有限公司</h3>
+          <p class="exp-role" data-i18n="exp.r1">人工智能应用助理 · 暑期实习</p>
+          <p class="exp-desc" data-i18n="exp.d1a" data-i18n-html>
+            作为大一在校生，提前进入企业参与在岗实战，主要负责 AI 技术落地应用相关辅助工作。在职期间，结合自身擅长的 <strong>AI 办公、AIGC 生图</strong>能力，协助团队优化日常办公流程，通过 AI 工具简化重复性办公工作，提升团队办公效率；同时运用 AI 生图技术，完成业务相关素材创作、图文优化等工作，为团队业务落地提供技术支持。
+          </p>
+          <p class="exp-desc" data-i18n="exp.d1b" data-i18n-html>
+            本次实习让我首次实现校园技术学习与企业真实场景的结合，深入了解 AI 技术在<strong>企业工作中的实际应用逻辑</strong>，积累了宝贵的产业实战经验，培养了极强的落地思维与职场协作能力。
+          </p>
+
+          <div class="exp-stats">
+            <div class="stat-card">
+              <div class="stat-label" data-i18n="exp.s1l">角色</div>
+              <div class="stat-value pink" data-i18n="exp.s1v">AI 应用助理</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label" data-i18n="exp.s2l">核心产出</div>
+              <div class="stat-value" data-i18n="exp.s2v">流程优化</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label" data-i18n="exp.s3l">技术应用</div>
+              <div class="stat-value blue" data-i18n="exp.s3v">AIGC · 自动化</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label" data-i18n="exp.s4l">收获</div>
+              <div class="stat-value" data-i18n="exp.s4v">产业实战经验</div>
+            </div>
+          </div>
+
+          <div class="cert-placeholder">
+            <span class="cert-icon">?</span>
+            <span>// CERTIFICATE.SCAN</span>
+            <span class="cert-status"><span class="dot"></span>PENDING</span>
+            <span data-i18n="exp.cert1">实习证明素材待上传</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Entry 02: Training -->
+      <div class="exp-entry reveal">
+        <div class="exp-number">02</div>
+        <div class="exp-content">
+          <div class="exp-meta">
+            <span>TRAINING</span>
+            <span class="badge" data-i18n="exp.b1">大一暑假</span>
+            <span class="badge accent" data-i18n="exp.b3">大厂认证</span>
+          </div>
+          <h3 class="exp-title" data-i18n="exp.t2">字节跳动 × AMD 超级拍档火令营</h3>
+          <p class="exp-role" data-i18n="exp.r2">AI 方向官方实训 · 系统化学习</p>
+          <p class="exp-desc" data-i18n="exp.d2a" data-i18n-html>
+            参与由头部互联网企业<strong>字节跳动</strong>、顶尖芯片科技企业 <strong>AMD</strong> 联合举办的专项 AI 实训营，系统学习前沿人工智能应用技术，重点深耕 AI 智能体、AIGC 创作、AI 场景化落地等核心课程内容。
+          </p>
+          <p class="exp-desc" data-i18n="exp.d2b" data-i18n-html>
+            全程完成全部实训课程、实操任务与考核，顺利通过官方认证，获得<strong>字节跳动官方颁发的 AI 方向实训认证证书</strong>。通过本次大厂专项实训，系统补齐了 AI 应用的标准化开发与落地思维，接轨行业前沿技术标准。
+          </p>
+
+          <div class="exp-stats">
+            <div class="stat-card">
+              <div class="stat-label" data-i18n="exp.s5l">主办方</div>
+              <div class="stat-value pink" data-i18n="exp.s5v">字节 × AMD</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label" data-i18n="exp.s6l">方向</div>
+              <div class="stat-value" data-i18n="exp.s6v">AI 智能体 / AIGC</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label" data-i18n="exp.s7l">认证状态</div>
+              <div class="stat-value blue" data-i18n="exp.s7v">已通过 ✓</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label" data-i18n="exp.s8l">证书颁发</div>
+              <div class="stat-value" data-i18n="exp.s8v">字节跳动官方</div>
+            </div>
+          </div>
+
+          <div class="cert-placeholder">
+            <span class="cert-icon">?</span>
+            <span>// CERTIFICATE.SCAN</span>
+            <span class="cert-status"><span class="dot"></span>PENDING</span>
+            <span data-i18n="exp.cert2">大厂认证证书素材待上传</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     EDUCATION SECTION
+     ============================================ -->
+<section class="section" id="education">
+  <div class="container">
+    <div class="section-label reveal">// EDUCATION</div>
+    <h2 class="section-title reveal" data-i18n="edu.title" data-i18n-html>教育<span class="accent">背景</span></h2>
+
+    <div class="edu-grid">
+      <div class="edu-card reveal">
+        <div class="edu-card-label">// ACADEMIC_INFO</div>
+        <div class="edu-item">
+          <div class="edu-key" data-i18n="edu.k1">院校</div>
+          <div class="edu-val" data-i18n="edu.v1">合肥工业大学（宣城校区）</div>
+        </div>
+        <div class="edu-item">
+          <div class="edu-key" data-i18n="edu.k2">专业</div>
+          <div class="edu-val accent" data-i18n="edu.v2">软件工程</div>
+        </div>
+        <div class="edu-item">
+          <div class="edu-key" data-i18n="edu.k3">在读阶段</div>
+          <div class="edu-val" data-i18n="edu.v3">准大二本科生</div>
+        </div>
+      </div>
+
+      <div class="edu-card reveal reveal-delay-1">
+        <div class="edu-card-label">// STUDY_DIRECTION</div>
+        <p class="edu-direction" data-i18n="edu.dir" data-i18n-html>
+          以<strong>软件工程</strong>专业为基础，主攻<strong>人工智能应用</strong>、AI Agent 智能体、AIGC 创意生成、AI 办公自动化落地方向。坚持"理论为辅、实战为主"的成长理念，持续积累一线 AI 实践经验。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SUMMARY SECTION
+     ============================================ -->
+<section class="summary" id="summary">
+  <div class="summary-glow"></div>
+  <div class="container">
+    <div class="summary-content reveal">
+      <div class="summary-label">// MISSION_LOG</div>
+      <p class="summary-text" data-i18n="sum.text" data-i18n-html>
+        始终坚持<strong>"理论为辅、实战为主"</strong>的成长理念。在多数同龄人专注课堂学习的阶段，我主动突破校园学习边界，通过<strong>企业实习</strong>、<span class="blue">大厂专项实训</span>积累稀缺的 AI 实战经验，形成了专属的 AI 技术应用能力体系。
+      </p>
+      <p class="summary-sub" data-i18n="sum.sub">
+        未来，我将持续深耕 AI Agent 与 AIGC 落地赛道，持续打磨技术能力，积累更多项目实战与产业经验，不断提升自身技术竞争力，努力成为兼具基础功底与实战能力的人工智能应用开发者。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     FOOTER / CONTACT
+     ============================================ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-cell reveal">
+        <div class="cell-label">// EMAIL</div>
+        <div class="cell-value pink">
+          <a href="mailto:ouyuan276801@qq.com">ouyuan276801@qq.com</a>
+        </div>
+      </div>
+      <div class="footer-cell reveal reveal-delay-1">
+        <div class="cell-label">// ID</div>
+        <div class="cell-value purple">chisa.official</div>
+      </div>
+      <div class="footer-cell reveal reveal-delay-2">
+        <div class="cell-label">// UNIVERSITY</div>
+        <div class="cell-value blue"><a href="https://www.hfut.edu.cn/" target="_blank" rel="noopener" data-i18n="footer.uni">HFUT · 宣城校区</a></div>
+      </div>
+      <div class="footer-cell reveal reveal-delay-3">
+        <div class="cell-label">// STATUS</div>
+        <div class="cell-value muted" data-i18n="footer.status">准大二 · AI 应用方向</div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="left">
+        <span class="footer-logo">chisa.official</span>
+        <span>// PIXEL CYBERPUNK PORTFOLIO</span>
+      </div>
+      <div class="right">
+        v1.0.0 · Built with ♥ · 2026
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================
+     JAVASCRIPT
+     ============================================ -->
+<script>
+// ============================================
+// i18n TRANSLATION DICTIONARY
+// ============================================
+const i18nData = {
+  // --- Navigation ---
+  'nav.home':    { zh: '首页',    en: 'Home' },
+  'nav.about':   { zh: '关于我',  en: 'About' },
+  'nav.skills':  { zh: '技能',    en: 'Skills' },
+  'nav.exp':     { zh: '经历',    en: 'Experience' },
+  'nav.edu':     { zh: '教育',    en: 'Education' },
+
+  // --- Hero ---
+  'hero.bio': {
+    zh: '合肥工业大学（宣城校区）软件工程专业准大二学生，长期聚焦<strong>人工智能应用落地</strong>领域，深耕 AI Agent 智能体开发、AI 自动化办公搭建、AIGC 图像生成三大核心方向。相较于基础专业学习，更注重技术的<strong>实战落地与场景应用</strong>。',
+    en: 'Rising sophomore in Software Engineering at Hefei University of Technology (Xuancheng Campus), focusing on <strong>AI application implementation</strong>. Deeping into three core areas: AI Agent development, AI office automation, and AIGC image generation. Prioritizes <strong>practical deployment and real-world application</strong> over theoretical study.'
+  },
+  'hero.cta1': { zh: '查看经历 →',  en: 'View Experience →' },
+  'hero.cta2': { zh: '关于我',      en: 'About Me' },
+
+  // --- About ---
+  'about.title': {
+    zh: '关于<span class="accent">我</span>',
+    en: 'About <span class="accent">Me</span>'
+  },
+  'about.k1': { zh: '院校', en: 'University' },
+  'about.v1': { zh: '合肥工业大学', en: 'Hefei Univ. of Tech.' },
+  'about.k2': { zh: '校区', en: 'Campus' },
+  'about.v2': { zh: '宣城校区', en: 'Xuancheng' },
+  'about.k3': { zh: '专业', en: 'Major' },
+  'about.v3': { zh: '软件工程', en: 'Software Engineering' },
+  'about.k4': { zh: '年级', en: 'Grade' },
+  'about.v4': { zh: '准大二', en: 'Rising Sophomore' },
+  'about.k5': { zh: '方向', en: 'Focus' },
+  'about.v5': { zh: 'AI 应用落地', en: 'AI Application' },
+  'about.k6': { zh: '英语', en: 'English' },
+  'about.v6': { zh: 'IELTS 6.0', en: 'IELTS 6.0' },
+  'about.k7': { zh: '定位', en: 'Role' },
+  'about.v7': { zh: '实战型开发者', en: 'Practical Developer' },
+  'about.p1': {
+    zh: '目前就读于<strong>合肥工业大学宣城校区</strong>软件工程专业，即将升入大二。在专业学习之余，我明确锁定人工智能应用赛道，拒绝单一的课本理论学习，专注钻研轻量化、高落地性的 AI 技术应用。',
+    en: 'Currently studying <strong>Software Engineering at Hefei University of Technology, Xuancheng Campus</strong>, about to enter sophomore year. Beyond coursework, I have firmly committed to the AI application track, rejecting purely textbook-based learning in favor of lightweight, highly deployable AI technologies.'
+  },
+  'about.p2': {
+    zh: '重点研究 <span class="highlight">AI Agent 智能体搭建</span>、<span class="highlight">AI 办公自动化流程优化</span>、<span class="highlight">AI 生图创作与场景落地</span>，具备扎实的 AI 工具实操能力与场景化思维。',
+    en: 'Primary focus includes <span class="highlight">AI Agent development</span>, <span class="highlight">AI office automation optimization</span>, and <span class="highlight">AI image generation and deployment</span>, with solid hands-on proficiency in AI tools and scenario-driven thinking.'
+  },
+  'about.p3': {
+    zh: '在能力储备上，我具备良好的英文阅读与学习能力，高中阶段曾取得<strong>雅思 6.0</strong> 成绩，能够无障碍阅读海外 AI 技术文档、前沿论文与官方开发手册，为自主学习前沿人工智能技术提供有力支撑。',
+    en: 'In terms of capabilities, I have strong English reading and learning skills, having achieved <strong>IELTS 6.0</strong> in high school. I can fluently read overseas AI technical documentation, cutting-edge papers, and official development manuals, providing strong support for self-directed learning of frontier AI technologies.'
+  },
+  'about.p4': {
+    zh: '大一学年，我始终以实战为核心提升个人技术能力，利用暑期完成企业在岗实习，并参与<strong>字节跳动、AMD 联合举办</strong>的官方 AI 专项实训，斩获大厂认证证书。现阶段深耕 AI 应用落地，持续打磨项目实操能力，积极积累产业级实践经验。',
+    en: 'Throughout my freshman year, I focused on practical skill development, completing a corporate internship during summer and participating in an <strong>official AI training program co-hosted by ByteDance and AMD</strong>, earning a big-tech certification. Currently deepening my work in AI application deployment, continuously honing project execution skills and accumulating industry-level experience.'
+  },
+
+  // --- Skills ---
+  'skills.title': {
+    zh: '专业<span class="accent">技能</span>',
+    en: 'Professional <span class="accent">Skills</span>'
+  },
+  'skills.t1': { zh: '人工智能核心技能', en: 'AI Core Skills' },
+  'skills.d1': {
+    zh: '精通 AI Agent 智能体搭建与功能调试，熟悉智能体任务拆解、自动化流程配置；擅长 AI 办公自动化体系搭建；熟练掌握 AIGC 图像生成技术，精通 Prompt 优化、风格定制、场景化生图与作品精细化调整。',
+    en: 'Proficient in AI Agent development and debugging, familiar with task decomposition and automation flow configuration. Skilled in building AI office automation systems. Master AIGC image generation with expertise in Prompt optimization, style customization, scenario-based generation, and fine-tuned output adjustment.'
+  },
+  'skills.t2': { zh: '专业基础能力', en: 'Professional Foundation' },
+  'skills.d2': {
+    zh: '具备软件工程专业扎实的底层基础，掌握计算机基础理论、程序开发逻辑；拥有良好的自主学习能力与技术落地思维，擅长快速学习前沿 AI 工具与技术，并转化为实际应用成果。',
+    en: 'Solid foundation in Software Engineering with strong grasp of computer science theory and programming logic. Excellent self-learning ability and practical mindset, adept at quickly mastering cutting-edge AI tools and translating them into real-world applications.'
+  },
+  'skills.t3': { zh: '语言能力', en: 'Language Proficiency' },
+  'skills.d3': {
+    zh: '持有雅思 6.0 成绩，具备优秀的英文读写能力，可独立阅读海外前沿 AI 技术资料、官方文档及学术内容，适配 AI 领域国际化技术学习需求。',
+    en: 'Holds IELTS 6.0 certification with excellent English reading and writing proficiency. Capable of independently reading frontier AI technical materials, official documentation, and academic content, meeting the international learning demands of the AI field.'
+  },
+
+  // --- Experience ---
+  'exp.title': {
+    zh: '实践<span class="accent">经历</span>',
+    en: 'Practical <span class="accent">Experience</span>'
+  },
+  'exp.b1': { zh: '大一暑假', en: 'Freshman Summer' },
+  'exp.b2': { zh: '企业实战', en: 'Enterprise Practice' },
+  'exp.b3': { zh: '大厂认证', en: 'Big Tech Certified' },
+  'exp.t1': { zh: '广东创科安全科技有限公司', en: 'Guangdong Chuangke Safety Tech Co., Ltd.' },
+  'exp.r1': { zh: '人工智能应用助理 · 暑期实习', en: 'AI Application Assistant · Summer Internship' },
+  'exp.d1a': {
+    zh: '作为大一在校生，提前进入企业参与在岗实战，主要负责 AI 技术落地应用相关辅助工作。在职期间，结合自身擅长的 <strong>AI 办公、AIGC 生图</strong>能力，协助团队优化日常办公流程，通过 AI 工具简化重复性办公工作，提升团队办公效率；同时运用 AI 生图技术，完成业务相关素材创作、图文优化等工作，为团队业务落地提供技术支持。',
+    en: 'As a freshman, I entered corporate practice early, primarily assisting with AI technology deployment. During my tenure, I leveraged my <strong>AI office automation and AIGC image generation</strong> expertise to help the team optimize daily workflows, using AI tools to streamline repetitive tasks and boost efficiency. I also applied AI image generation for business-related material creation and visual optimization, providing technical support for team operations.'
+  },
+  'exp.d1b': {
+    zh: '本次实习让我首次实现校园技术学习与企业真实场景的结合，深入了解 AI 技术在<strong>企业工作中的实际应用逻辑</strong>，积累了宝贵的产业实战经验，培养了极强的落地思维与职场协作能力。',
+    en: 'This internship marked my first integration of campus learning with real enterprise scenarios, providing deep insight into <strong>how AI technology is practically applied in business</strong>. I gained valuable industry experience and developed strong deployment thinking and workplace collaboration skills.'
+  },
+  'exp.s1l': { zh: '角色',     en: 'Role' },
+  'exp.s1v': { zh: 'AI 应用助理',  en: 'AI Assistant' },
+  'exp.s2l': { zh: '核心产出',   en: 'Key Output' },
+  'exp.s2v': { zh: '流程优化',   en: 'Workflow Optimization' },
+  'exp.s3l': { zh: '技术应用',   en: 'Tech Applied' },
+  'exp.s3v': { zh: 'AIGC · 自动化', en: 'AIGC · Automation' },
+  'exp.s4l': { zh: '收获',     en: 'Gain' },
+  'exp.s4v': { zh: '产业实战经验', en: 'Industry Experience' },
+  'exp.cert1': { zh: '实习证明素材待上传', en: 'Internship certificate pending upload' },
+  'exp.t2': { zh: '字节跳动 × AMD 超级拍档火令营', en: 'ByteDance × AMD Super Partner Camp' },
+  'exp.r2': { zh: 'AI 方向官方实训 · 系统化学习', en: 'Official AI Training · Systematic Learning' },
+  'exp.d2a': {
+    zh: '参与由头部互联网企业<strong>字节跳动</strong>、顶尖芯片科技企业 <strong>AMD</strong> 联合举办的专项 AI 实训营，系统学习前沿人工智能应用技术，重点深耕 AI 智能体、AIGC 创作、AI 场景化落地等核心课程内容。',
+    en: 'Participated in a specialized AI training camp co-hosted by leading internet company <strong>ByteDance</strong> and top chip technology company <strong>AMD</strong>. Systematically studied frontier AI application technologies, with focus on AI agents, AIGC creation, and scenario-based AI deployment.'
+  },
+  'exp.d2b': {
+    zh: '全程完成全部实训课程、实操任务与考核，顺利通过官方认证，获得<strong>字节跳动官方颁发的 AI 方向实训认证证书</strong>。通过本次大厂专项实训，系统补齐了 AI 应用的标准化开发与落地思维，接轨行业前沿技术标准。',
+    en: 'Completed all training courses, practical tasks, and assessments, successfully passing official certification to earn the <strong>ByteDance-issued AI Training Certificate</strong>. This program systematically filled gaps in standardized AI development and deployment methodology, aligning my skills with industry frontier standards.'
+  },
+  'exp.s5l': { zh: '主办方',     en: 'Organizer' },
+  'exp.s5v': { zh: '字节 × AMD',    en: 'ByteDance × AMD' },
+  'exp.s6l': { zh: '方向',       en: 'Focus' },
+  'exp.s6v': { zh: 'AI 智能体 / AIGC', en: 'AI Agent / AIGC' },
+  'exp.s7l': { zh: '认证状态',    en: 'Certification' },
+  'exp.s7v': { zh: '已通过 ✓',    en: 'Passed ✓' },
+  'exp.s8l': { zh: '证书颁发',    en: 'Issued By' },
+  'exp.s8v': { zh: '字节跳动官方',   en: 'ByteDance Official' },
+  'exp.cert2': { zh: '大厂认证证书素材待上传', en: 'Certification image pending upload' },
+
+  // --- Education ---
+  'edu.title': {
+    zh: '教育<span class="accent">背景</span>',
+    en: 'Educational <span class="accent">Background</span>'
+  },
+  'edu.k1': { zh: '院校',     en: 'University' },
+  'edu.v1': { zh: '合肥工业大学（宣城校区）', en: 'Hefei University of Technology (Xuancheng)' },
+  'edu.k2': { zh: '专业',     en: 'Major' },
+  'edu.v2': { zh: '软件工程',    en: 'Software Engineering' },
+  'edu.k3': { zh: '在读阶段',   en: 'Current Status' },
+  'edu.v3': { zh: '准大二本科生',  en: 'Rising Sophomore' },
+  'edu.dir': {
+    zh: '以<strong>软件工程</strong>专业为基础，主攻<strong>人工智能应用</strong>、AI Agent 智能体、AIGC 创意生成、AI 办公自动化落地方向。坚持"理论为辅、实战为主"的成长理念，持续积累一线 AI 实践经验。',
+    en: 'Building on a <strong>Software Engineering</strong> foundation, focusing on <strong>AI applications</strong>, AI Agent development, AIGC creative generation, and AI office automation deployment. Committed to a "theory as supplement, practice as priority" growth philosophy, continuously accumulating frontline AI practical experience.'
+  },
+
+  // --- Summary ---
+  'sum.text': {
+    zh: '始终坚持<strong>"理论为辅、实战为主"</strong>的成长理念。在多数同龄人专注课堂学习的阶段，我主动突破校园学习边界，通过<strong>企业实习</strong>、<span class="blue">大厂专项实训</span>积累稀缺的 AI 实战经验，形成了专属的 AI 技术应用能力体系。',
+    en: 'Consistently adhering to the growth philosophy of <strong>"theory as supplement, practice as priority"</strong>. While most peers focus on classroom learning, I proactively break beyond campus boundaries, accumulating scarce AI practical experience through <strong>corporate internships</strong> and <span class="blue">big-tech specialized training</span>, forming my own AI technology application capability system.'
+  },
+  'sum.sub': {
+    zh: '未来，我将持续深耕 AI Agent 与 AIGC 落地赛道，持续打磨技术能力，积累更多项目实战与产业经验，不断提升自身技术竞争力，努力成为兼具基础功底与实战能力的人工智能应用开发者。',
+    en: 'Looking ahead, I will continue to deepen my work in AI Agent and AIGC deployment, continuously honing technical skills, accumulating more project experience and industry insights, and enhancing my technical competitiveness — striving to become an AI application developer with both solid foundations and practical capabilities.'
+  },
+
+  // --- Footer ---
+  'footer.uni': { zh: 'HFUT · 宣城校区', en: 'HFUT · Xuancheng' },
+  'footer.status': { zh: '准大二 · AI 应用方向', en: 'Rising Sophomore · AI Application' }
+};
+
+// ============================================
+// LANGUAGE SWITCHING LOGIC
+// ============================================
+function applyLanguage(lang) {
+  document.documentElement.lang = (lang === 'zh') ? 'zh-CN' : 'en';
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const data = i18nData[key];
+    if (!data) return;
+
+    if (el.hasAttribute('data-i18n-html')) {
+      el.innerHTML = data[lang];
+    } else {
+      el.textContent = data[lang];
+    }
+  });
+
+  // Update toggle button states
+  document.querySelectorAll('.nav-lang button').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+  });
+
+  // Persist preference
+  try { localStorage.setItem('portfolio-lang', lang); } catch(e) {}
+}
+
+// Initialize language from localStorage or default to Chinese
+let currentLang = 'zh';
+try {
+  const saved = localStorage.getItem('portfolio-lang');
+  if (saved === 'en' || saved === 'zh') currentLang = saved;
+} catch(e) {}
+applyLanguage(currentLang);
+
+// Language toggle button handlers
+document.querySelectorAll('.nav-lang button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const lang = btn.getAttribute('data-lang');
+    if (lang !== currentLang) {
+      currentLang = lang;
+      applyLanguage(lang);
+    }
+  });
+});
+
+// ============================================
+// SCROLL REVEAL — IntersectionObserver
+// ============================================
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+revealEls.forEach(el => observer.observe(el));
+
+// ============================================
+// NAV ACTIVE STATE ON SCROLL
+// ============================================
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop - 80;
+    if (window.scrollY >= sectionTop) {
+      current = section.getAttribute('id');
+    }
+  });
+
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) {
+      link.classList.add('active');
+    }
+  });
+});
+
+// ============================================
+// MOBILE NAV TOGGLE
+// ============================================
+const navToggle = document.querySelector('.nav-toggle');
+const navLinksEl = document.querySelector('.nav-links');
+if (navToggle) {
+  navToggle.addEventListener('click', () => {
+    if (navLinksEl.style.display === 'flex') {
+      navLinksEl.style.display = 'none';
+    } else {
+      navLinksEl.style.display = 'flex';
+      navLinksEl.style.position = 'absolute';
+      navLinksEl.style.top = '60px';
+      navLinksEl.style.left = '0';
+      navLinksEl.style.right = '0';
+      navLinksEl.style.flexDirection = 'column';
+      navLinksEl.style.background = 'var(--bg-base)';
+      navLinksEl.style.padding = '20px 32px';
+      navLinksEl.style.borderBottom = '1px solid var(--border)';
+      navLinksEl.style.gap = '16px';
+    }
+  });
+}
+
+// Close mobile nav on link click
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 900) {
+      navLinksEl.style.display = 'none';
+    }
+  });
+});
+
+// ============================================
+// HERO PARALLAX GLOW
+// ============================================
+const heroGlow = document.querySelector('.hero-glow');
+const heroGlow2 = document.querySelector('.hero-glow-2');
+
+window.addEventListener('mousemove', (e) => {
+  const x = (e.clientX / window.innerWidth - 0.5) * 20;
+  const y = (e.clientY / window.innerHeight - 0.5) * 20;
+  if (heroGlow) heroGlow.style.transform = `translate(${x}px, ${y}px)`;
+  if (heroGlow2) heroGlow2.style.transform = `translate(${-x}px, ${-y}px)`;
+});
+</script>
+
+</body>
+</html>
