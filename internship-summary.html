@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>chisa.official // 实习总结</title>
+<link rel="icon" type="image/jpeg" href="assets/avatar.jpg">
+<meta name="description" content="chisa.official 2026暑期实习总结 - 广东创科安全科技有限公司">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   DESIGN SYSTEM / TOKENS (与主站一致)
+   ============================================ */
+:root {
+  --bg-base: #08060c;
+  --bg-card: #100b18;
+  --bg-card-hover: #16101f;
+  --bg-terminal: #0a0710;
+  --bg-input: #0d0a14;
+
+  --pink: #e87eae;
+  --pink-bright: #f4a0c4;
+  --pink-glow: rgba(232, 126, 174, 0.35);
+  --pink-dim: rgba(232, 126, 174, 0.12);
+  --purple: #9d7ad6;
+  --purple-bright: #b89ce8;
+  --purple-glow: rgba(157, 122, 214, 0.35);
+  --purple-dim: rgba(157, 122, 214, 0.1);
+  --blue: #5dabc6;
+  --blue-bright: #7cc5db;
+  --blue-glow: rgba(93, 171, 198, 0.3);
+  --blue-dim: rgba(93, 171, 198, 0.1);
+  --lavender: #c8a8e8;
+
+  --text: #f5eef8;
+  --text-secondary: #bcaac8;
+  --text-muted: #8070a0;
+  --text-dim: #5a4d70;
+
+  --border: #241a30;
+  --border-bright: #3d2e50;
+  --border-hover: #5a4570;
+
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-pixel: 'Press Start 2P', monospace;
+
+  --max-w: 1200px;
+  --nav-h: 60px;
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-h);
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(157, 122, 214, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(157, 122, 214, 0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.12),
+    rgba(0, 0, 0, 0.12) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.6;
+}
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+::selection { background: var(--pink); color: var(--bg-base); }
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 0; }
+::-webkit-scrollbar-thumb:hover { background: var(--purple); }
+
+/* ============================================
+   LAYOUT
+   ============================================ */
+.container {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative;
+  z-index: 1;
+}
+
+.section {
+  padding: 80px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--pink);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-label::before {
+  content: '';
+  width: 24px;
+  height: 2px;
+  background: var(--pink);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 48px;
+  letter-spacing: -0.02em;
+}
+
+.section-title .accent { color: var(--pink); }
+.section-title .accent-purple { color: var(--purple); }
+
+/* ============================================
+   NAVIGATION (与主站一致)
+   ============================================ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-h);
+  background: rgba(8, 6, 12, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+}
+
+.nav-inner {
+  max-width: var(--max-w);
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  font-family: var(--font-pixel);
+  font-size: 0.6rem;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-logo .dot {
+  width: 8px;
+  height: 8px;
+  background: var(--pink);
+  display: inline-block;
+}
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  transition: color 0.2s;
+  position: relative;
+}
+
+.nav-links a:hover { color: var(--pink); }
+
+.nav-links a.active { color: var(--pink); }
+.nav-links a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--pink);
+}
+
+.nav-status {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--blue);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-status .dot {
+  width: 6px;
+  height: 6px;
+  background: var(--blue);
+  border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: 1px solid var(--border-bright);
+  padding: 6px 10px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text);
+}
+
+/* ============================================
+   PAGE HEADER
+   ============================================ */
+.page-header {
+  padding: calc(var(--nav-h) + 80px) 0 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-header-glow {
+  position: absolute;
+  top: 20%;
+  right: 5%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, var(--purple-glow) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.page-header-glow-2 {
+  position: absolute;
+  bottom: 10%;
+  left: 0%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, var(--pink-glow) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.terminal {
+  background: var(--bg-terminal);
+  border: 1px solid var(--border);
+  padding: 16px 20px;
+  margin-bottom: 32px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.8;
+  color: var(--blue);
+  position: relative;
+  max-width: 600px;
+}
+
+.terminal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+}
+
+.terminal-dots {
+  position: absolute;
+  top: 6px;
+  left: 12px;
+  display: flex;
+  gap: 6px;
+}
+
+.terminal-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.terminal-dots span:nth-child(1) { background: var(--pink); }
+.terminal-dots span:nth-child(2) { background: var(--purple); }
+.terminal-dots span:nth-child(3) { background: var(--blue); }
+
+.terminal-body {
+  margin-top: 16px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.terminal-line .ok { color: var(--blue); }
+.terminal-line .arrow { color: var(--text-muted); }
+.terminal-line .welcome { color: var(--pink); }
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 7vw, 4.5rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
+}
+
+.page-title .outline {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--text);
+}
+
+.page-title .filled { color: var(--pink); }
+
+.page-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  letter-spacing: 0.02em;
+}
+
+.page-subtitle .sep { color: var(--text-dim); margin: 0 8px; }
+
+.page-bio {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  max-width: 640px;
+  line-height: 1.75;
+  margin-bottom: 32px;
+}
+
+.page-bio strong { color: var(--lavender); font-weight: 500; }
+
+/* Download button */
+.btn {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 14px 28px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  letter-spacing: 0.03em;
+}
+
+.btn-primary {
+  background: var(--pink);
+  color: var(--bg-base);
+}
+
+.btn-primary:hover {
+  background: var(--pink-bright);
+  box-shadow: 0 0 24px var(--pink-glow);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border-bright);
+}
+
+.btn-outline:hover {
+  border-color: var(--pink);
+  color: var(--pink);
+}
+
+/* ============================================
+   PROJECT CARDS
+   ============================================ */
+.projects-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.project-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 32px 28px;
+  position: relative;
+  transition: all 0.3s;
+  overflow: hidden;
+}
+
+.project-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 0;
+  transition: height 0.3s;
+}
+
+.project-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-bright);
+  transform: translateY(-2px);
+}
+
+.project-card:hover::before { height: 100%; }
+
+.project-card:nth-child(1)::before, .project-card:nth-child(3)::before { background: var(--pink); }
+.project-card:nth-child(2)::before, .project-card:nth-child(4)::before { background: var(--purple); }
+
+.project-card-num {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+.project-card-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.project-card-role {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--purple);
+  margin-bottom: 14px;
+}
+
+.project-card-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.project-card-desc strong { color: var(--lavender); font-weight: 500; }
+
+.project-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  padding: 4px 8px;
+  background: var(--bg-base);
+  border: 1px solid var(--border-bright);
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.tag:hover { border-color: var(--pink); color: var(--pink); }
+.tag.accent { border-color: var(--purple-dim); color: var(--purple); }
+.tag.accent:hover { border-color: var(--purple); }
+.tag.blue { border-color: var(--blue-dim); color: var(--blue); }
+.tag.blue:hover { border-color: var(--blue); }
+
+/* Status badge for incomplete projects */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border: 1px solid var(--border-bright);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.status-badge.partial { border-color: var(--pink-dim); color: var(--pink); background: var(--pink-dim); }
+.status-badge.exploratory { border-color: var(--purple-dim); color: var(--purple); background: var(--purple-dim); }
+.status-badge.completed { border-color: var(--blue-dim); color: var(--blue); background: var(--blue-dim); }
+
+.status-badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.status-badge.partial .dot { background: var(--pink); }
+.status-badge.exploratory .dot { background: var(--purple); }
+.status-badge.completed .dot { background: var(--blue); }
+
+/* ============================================
+   INFO CARDS
+   ============================================ */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.info-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 32px;
+  position: relative;
+}
+
+.info-card-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--pink);
+  margin-bottom: 20px;
+}
+
+.info-card p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+
+.info-card p:last-child { margin-bottom: 0; }
+.info-card p strong { color: var(--lavender); font-weight: 500; }
+
+/* ============================================
+   TAKEAWAYS
+   ============================================ */
+.takeaways-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.takeaway-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 20px;
+  align-items: start;
+  border-left: 1px solid var(--border);
+  padding-left: 24px;
+  transition: border-color 0.3s;
+}
+
+.takeaway-item:hover { border-color: var(--pink); }
+
+.takeaway-num {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--border-bright);
+  transition: -webkit-text-stroke-color 0.3s;
+  line-height: 1;
+}
+
+.takeaway-item:hover .takeaway-num { -webkit-text-stroke-color: var(--pink); }
+
+.takeaway-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.takeaway-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ============================================
+   DOWNLOAD SECTION
+   ============================================ */
+.download-section {
+  text-align: center;
+  padding: 100px 0;
+  position: relative;
+}
+
+.download-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--pink-glow) 0%, transparent 70%);
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.download-content {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.download-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--pink);
+  letter-spacing: 0.15em;
+  margin-bottom: 24px;
+}
+
+.download-text {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+}
+
+.download-text strong { color: var(--pink); font-weight: 600; }
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 48px 0 32px;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.footer-logo {
+  font-family: var(--font-pixel);
+  font-size: 0.55rem;
+  color: var(--text-secondary);
+}
+
+.footer-bottom .left { display: flex; gap: 16px; align-items: center; }
+.footer-bottom .right { color: var(--text-dim); }
+
+/* ============================================
+   SCROLL REVEAL
+   ============================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 900px) {
+  .projects-grid { grid-template-columns: 1fr; }
+  .info-grid { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+  .nav-toggle { display: block; }
+  .takeaway-item { grid-template-columns: 1fr; gap: 8px; }
+}
+
+@media (max-width: 600px) {
+  .container { padding: 0 20px; }
+  .section { padding: 56px 0; }
+  .nav-inner { padding: 0 20px; }
+  .nav-logo { font-size: 0.5rem; }
+  .page-title { font-size: 2.5rem; }
+  .terminal { font-size: 0.7rem; padding: 14px 16px; }
+  .footer-bottom { flex-direction: column; gap: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================
+     NAVIGATION
+     ============================================ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <span class="dot"></span>
+      <span>chisa.official</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html#hero">首页</a></li>
+      <li><a href="index.html#about">关于我</a></li>
+      <li><a href="index.html#skills">技能</a></li>
+      <li><a href="index.html#experience">经历</a></li>
+      <li><a href="index.html#education">教育</a></li>
+      <li><a href="internship-summary.html" class="active">实习总结</a></li>
+    </ul>
+    <div class="nav-status">
+      <span class="dot"></span>
+      <span>ONLINE</span>
+    </div>
+    <button class="nav-toggle">MENU</button>
+  </div>
+</nav>
+
+<!-- ============================================
+     PAGE HEADER
+     ============================================ -->
+<header class="page-header">
+  <div class="page-header-glow"></div>
+  <div class="page-header-glow-2"></div>
+  <div class="container">
+    <div class="terminal">
+      <div class="terminal-dots">
+        <span></span><span></span><span></span>
+      </div>
+      <div class="terminal-body">
+        <div class="terminal-line"><span class="arrow">&gt;</span> internship_report.exe --load</div>
+        <div class="terminal-line"><span class="arrow">&gt;</span> parsing data........<span class="ok">[ok]</span></div>
+        <div class="terminal-line"><span class="arrow">&gt;</span> mounting projects..<span class="ok">[ok]</span></div>
+        <div class="terminal-line"><span class="arrow">&gt;</span> rendering summary...<span class="ok">[ok]</span></div>
+        <div class="terminal-line"><span class="welcome">&gt; report loaded successfully.</span></div>
+      </div>
+    </div>
+
+    <h1 class="page-title">
+      <span class="outline">INTERNSHIP</span><span class="filled">.SUMMARY</span>
+    </h1>
+
+    <p class="page-subtitle">
+      2026 Summer <span class="sep">//</span> 广东创科安全科技有限公司 <span class="sep">//</span> AI Application Assistant
+    </p>
+
+    <p class="page-bio">
+      2026年暑期，于<strong>广东创科安全科技有限公司</strong>担任人工智能应用助理，围绕AI编程、AIGC图像生成、企业资产收集和网络安全学习四大方向开展实习工作。以下是实习内容精简摘要，完整版可下载查看。
+    </p>
+
+    <div style="display:flex;gap:16px;flex-wrap:wrap;">
+      <a href="assets/实习总结_chisa.official.docx" download class="btn btn-primary">下载完整总结 ↓</a>
+      <a href="index.html" class="btn btn-outline">← 返回首页</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================
+     AI PROGRAMMING PROJECTS
+     ============================================ -->
+<section class="section">
+  <div class="container">
+    <div class="section-label reveal">// AI_PROGRAMMING</div>
+    <h2 class="section-title reveal">AI 编程<span class="accent">项目</span></h2>
+
+    <div class="projects-grid">
+      <!-- Project 1 -->
+      <div class="project-card reveal">
+        <div class="project-card-num">01</div>
+        <div class="status-badge completed"><span class="dot"></span>已完成</div>
+        <h3 class="project-card-title">高校学生管理系统</h3>
+        <p class="project-card-role">全栈 Web 应用 · Vue 3 + Node.js</p>
+        <p class="project-card-desc">
+          面向高校学生管理与教务场景的全栈Web应用，包含<strong>学生端前台、后台管理端和公共支撑模块</strong>三大部分。基于Prisma设计30余个数据模型，开发75余个RESTful接口，实现88个视图组件。集成JWT双Token认证、RBAC权限控制、WebSocket实时通信、Excel导入导出等企业级功能。
+        </p>
+        <div class="project-card-tags">
+          <span class="tag">Vue 3</span>
+          <span class="tag">Node.js</span>
+          <span class="tag">Express</span>
+          <span class="tag">Prisma</span>
+          <span class="tag">MySQL</span>
+          <span class="tag">Socket.IO</span>
+          <span class="tag">TypeScript</span>
+          <span class="tag accent">Element Plus</span>
+        </div>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="project-card reveal reveal-delay-1">
+        <div class="project-card-num">02</div>
+        <div class="status-badge completed"><span class="dot"></span>已完成 · 已上线</div>
+        <h3 class="project-card-title">个人主页静态网站</h3>
+        <p class="project-card-role">像素赛博朋克风格 · 纯 HTML/CSS/JS</p>
+        <p class="project-card-desc">
+          独立开发的像素赛博朋克风格个人简历网站，<strong>已部署上线</strong>。采用纯HTML/CSS/JavaScript编写，实现中英文双语切换、响应式布局、滚动渐入动画、终端启动动画、鼠标视差效果等特性。无任何构建工具或框架依赖。
+        </p>
+        <div class="project-card-tags">
+          <span class="tag">HTML5</span>
+          <span class="tag">CSS3</span>
+          <span class="tag">Vanilla JS</span>
+          <span class="tag">i18n</span>
+          <span class="tag">Responsive</span>
+          <span class="tag blue">Netlify</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     AIGC PROJECTS
+     ============================================ -->
+<section class="section">
+  <div class="container">
+    <div class="section-label reveal">// AIGC_EXPLORATION</div>
+    <h2 class="section-title reveal">AIGC 图像生成<span class="accent-purple">探索</span></h2>
+
+    <div class="projects-grid">
+      <!-- Project 3 -->
+      <div class="project-card reveal">
+        <div class="project-card-num">03</div>
+        <div class="status-badge partial"><span class="dot"></span>部分完成</div>
+        <h3 class="project-card-title">透明亚克力键盘电商图</h3>
+        <p class="project-card-role">AI 文生图 · GPT Image 2.0 + 豆包</p>
+        <p class="project-card-desc">
+          为61键全透明亚克力机械键盘生成电商白底产品图。通过GPT Image 2.0 API编写三视角英文提示词进行生成尝试，并使用豆包AI生成补充素材。因<strong>透明材质还原难度较高</strong>，项目未完成全部成品，仅产出部分白底样例图作为阶段性探索成果。
+        </p>
+        <div class="project-card-tags">
+          <span class="tag">GPT Image 2.0</span>
+          <span class="tag">Doubao AI</span>
+          <span class="tag">Prompt Engineering</span>
+          <span class="tag">Python</span>
+          <span class="tag accent">API Integration</span>
+        </div>
+      </div>
+
+      <!-- Project 4 -->
+      <div class="project-card reveal reveal-delay-1">
+        <div class="project-card-num">04</div>
+        <div class="status-badge exploratory"><span class="dot"></span>探索性项目</div>
+        <h3 class="project-card-title">桌宠动图项目</h3>
+        <p class="project-card-role">AI 提示词工程 · 角色特征反推</p>
+        <p class="project-card-desc">
+          为桌面宠物应用生成透明背景角色动图。尝试了GIF动画和PNG序列帧等多种动图实现方案，但<strong>均因效果不达标被淘汰</strong>。项目有效成果集中在提示词工程方面：开发了反推角色特征的提示词Skill，成功反推多个角色的特征提示词，并编写了多种角色动作的精灵图生成提示词。
+        </p>
+        <div class="project-card-tags">
+          <span class="tag">Prompt Engineering</span>
+          <span class="tag">Character Reverse</span>
+          <span class="tag">Sprite Sheet</span>
+          <span class="tag">Python</span>
+          <span class="tag accent">OCR</span>
+          <span class="tag accent">Color Analysis</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     OTHER WORK
+     ============================================ -->
+<section class="section">
+  <div class="container">
+    <div class="section-label reveal">// OTHER_WORK</div>
+    <h2 class="section-title reveal">其他实习<span class="accent">工作</span></h2>
+
+    <div class="info-grid">
+      <div class="info-card reveal">
+        <div class="info-card-label">// ASSET_COLLECTION</div>
+        <p>
+          <strong>企业资产收集</strong>
+        </p>
+        <p>
+          协助公司同事前往松山湖为企业进行实地资产收集工作，了解企业IT资产管理的基本流程和规范要求，积累了实地勘察和数据登记的实践经验。
+        </p>
+      </div>
+
+      <div class="info-card reveal reveal-delay-1">
+        <div class="info-card-label">// NETWORK_SECURITY</div>
+        <p>
+          <strong>网络安全学习</strong>
+        </p>
+        <p>
+          深入学习企业网络安全同事在实践过程中发现的真实漏洞案例，涵盖SQL注入、XSS、CSRF等常见Web安全漏洞的原理与防范措施，提高了编码安全意识。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     TAKEAWAYS
+     ============================================ -->
+<section class="section">
+  <div class="container">
+    <div class="section-label reveal">// KEY_TAKEAWAYS</div>
+    <h2 class="section-title reveal">实习<span class="accent">收获</span></h2>
+
+    <div class="takeaways-list">
+      <div class="takeaway-item reveal">
+        <div class="takeaway-num">01</div>
+        <div>
+          <div class="takeaway-title">全栈开发能力显著提升</div>
+          <p class="takeaway-desc">通过独立开发高校学生管理系统，系统掌握了Vue 3 + Node.js + Express + Prisma + MySQL技术栈，完整经历了一个企业级全栈项目的全生命周期。</p>
+        </div>
+      </div>
+
+      <div class="takeaway-item reveal reveal-delay-1">
+        <div class="takeaway-num">02</div>
+        <div>
+          <div class="takeaway-title">AIGC提示词工程与AI图像生成探索</div>
+          <p class="takeaway-desc">掌握了文生图API调用、提示词工程等核心技术。虽因技术难度较高未全部完成，但通过反复迭代调优和失败方案分析，积累了宝贵的提示词工程经验。</p>
+        </div>
+      </div>
+
+      <div class="takeaway-item reveal reveal-delay-2">
+        <div class="takeaway-num">03</div>
+        <div>
+          <div class="takeaway-title">工程化思维与文档习惯</div>
+          <p class="takeaway-desc">为每个项目编写了详细的项目交接文档，涵盖技术架构、模块详解、工作流程、已知问题和维护指南，培养了良好的工程文档习惯。</p>
+        </div>
+      </div>
+
+      <div class="takeaway-item reveal reveal-delay-3">
+        <div class="takeaway-num">04</div>
+        <div>
+          <div class="takeaway-title">安全编码意识</div>
+          <p class="takeaway-desc">通过学习网络安全实战案例，深刻认识到安全编码的重要性，在后续开发中自觉进行输入校验、权限控制、敏感数据保护等安全实践。</p>
+        </div>
+      </div>
+
+      <div class="takeaway-item reveal">
+        <div class="takeaway-num">05</div>
+        <div>
+          <div class="takeaway-title">团队协作与职业素养</div>
+          <p class="takeaway-desc">在参与企业资产收集等工作中，锻炼了沟通协调能力和团队协作精神，了解了企业实际运作流程和职业规范。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     DOWNLOAD SECTION
+     ============================================ -->
+<section class="download-section">
+  <div class="download-glow"></div>
+  <div class="container">
+    <div class="download-content reveal">
+      <div class="download-label">// FULL_REPORT</div>
+      <p class="download-text">
+        以上为实习内容精简摘要。<strong>完整版实习总结</strong>包含详细的项目描述、技术架构、工作量明细和深度体会，可下载 Word 文档查看。
+      </p>
+      <a href="assets/实习总结_chisa.official.docx" download class="btn btn-primary">下载完整实习总结.docx ↓</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     FOOTER
+     ============================================ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <div class="left">
+        <span class="footer-logo">chisa.official</span>
+        <span>// INTERNSHIP_SUMMARY · 2026</span>
+      </div>
+      <div class="right">
+        v1.0.0 · Built with ♥ · 2026
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================
+     JAVASCRIPT
+     ============================================ -->
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Mobile nav toggle
+const navToggle = document.querySelector('.nav-toggle');
+const navLinks = document.querySelector('.nav-links');
+if (navToggle) {
+  navToggle.addEventListener('click', () => {
+    if (navLinks.style.display === 'flex') {
+      navLinks.style.display = '';
+    } else {
+      navLinks.style.display = 'flex';
+      navLinks.style.flexDirection = 'column';
+      navLinks.style.position = 'absolute';
+      navLinks.style.top = '60px';
+      navLinks.style.left = '0';
+      navLinks.style.right = '0';
+      navLinks.style.background = 'var(--bg-card)';
+      navLinks.style.padding = '16px 32px';
+      navLinks.style.borderBottom = '1px solid var(--border)';
+    }
+  });
+}
+</script>
+</body>
+</html>
